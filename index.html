@@ -4,107 +4,239 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catatan Keuangan Semen Bima</title>
+    <!-- Import Font Modern kekinian: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #a3c1ad;
-            --bg-color: #f8f9fa;
+            --primary: #6c5ce7; /* Ungu pastel */
+            --secondary: #00cec9; /* Tosca */
+            --danger: #ff7675; /* Merah soft */
+            --success: #00b894; /* Hijau soft */
+            --bg-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            --text-dark: #2d3436;
         }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: #333;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-dark);
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
         }
+
+        /* Gaya Kotak Utama (Glassmorphism) */
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
-        h2, h3 {
+
+        h2 {
             text-align: center;
-            color: #2c3e50;
+            color: var(--primary);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
         }
+        
+        .subtitle {
+            text-align: center;
+            color: #636e72;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        h3 {
+            color: var(--primary);
+            font-size: 20px;
+            margin-top: 40px;
+            border-bottom: 2px dashed #dfe6e9;
+            padding-bottom: 10px;
+        }
+
+        /* Notifikasi Koneksi kekinian */
+        .status-koneksi {
+            text-align: center;
+            padding: 10px 20px;
+            margin: 0 auto 25px auto;
+            border-radius: 50px;
+            background-color: #ffeaa7;
+            color: #d35400;
+            font-weight: 600;
+            font-size: 14px;
+            max-width: max-content;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .connected {
+            background-color: #55efc4;
+            color: #00b894;
+        }
+
+        /* Kotak Ringkasan Kekinian */
+        .summary-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .summary-box {
+            flex: 1;
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 8px 15px rgba(108, 92, 231, 0.2);
+            transition: transform 0.3s ease;
+        }
+        .summary-box.secondary {
+            background: linear-gradient(135deg, #00cec9 0%, #81ecec 100%);
+            box-shadow: 0 8px 15px rgba(0, 206, 201, 0.2);
+        }
+        .summary-box:hover {
+            transform: translateY(-5px);
+        }
+        .summary-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        .summary-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* Form Input */
         .form-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.8);
         }
-        input, select, button {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
+        input, select {
+            padding: 12px 15px;
+            border: 2px solid #dfe6e9;
+            border-radius: 12px;
+            font-size: 15px;
             width: 100%;
             box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            background: white;
+            transition: all 0.3s;
         }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+        
         .btn-submit {
             grid-column: span 2;
-            background-color: #2c3e50;
+            background-color: var(--primary);
             color: white;
             border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
             cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
         }
-        .btn-submit:hover {
-            background-color: #1a252f;
+        .btn-submit:hover:not(:disabled) {
+            background-color: #5f27cd;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(108, 92, 231, 0.4);
         }
         .btn-submit:disabled {
-            background-color: #7f8c8d;
+            background-color: #b2bec3;
+            box-shadow: none;
             cursor: not-allowed;
         }
+
+        /* Tabel Kekinian (Tanpa garis pinggir kaku) */
         .table-responsive {
             overflow-x: auto;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
         table {
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-            min-width: 500px;
+            border-collapse: separate;
+            border-spacing: 0;
+            min-width: 600px;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
         }
         th, td {
-            border: 1px solid #bdc3c7;
-            padding: 12px;
+            padding: 15px;
             text-align: center;
         }
         th {
-            background-color: var(--primary-color);
-            color: #2c3e50;
+            background-color: #f1f2f6;
+            color: #576574;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+        td {
+            border-bottom: 1px solid #f1f2f6;
+            color: #2d3436;
+            font-size: 14px;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover td {
+            background-color: #fafbfc;
         }
         .text-left { text-align: left; }
-        .negative { color: #e74c3c; font-weight: bold; }
-        .positive { color: #27ae60; font-weight: bold; }
-        .summary-box {
-            background-color: #e8f4f8;
-            padding: 15px;
-            border-radius: 5px;
-            text-align: center;
-            margin-bottom: 20px;
-            font-weight: bold;
+
+        /* Badge Status / Label (Gaya Anak Muda) */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 13px;
+            display: inline-block;
         }
-        .status-koneksi {
-            text-align: center;
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            background-color: #f39c12;
+        .badge-negative { background-color: #ffeaa7; color: #d63031; }
+        .badge-positive { background-color: #55efc4; color: #009432; }
+        .badge-neutral { background-color: #dfe6e9; color: #636e72; }
+
+        .btn-delete {
+            background: #ff7675;
             color: white;
-            font-weight: bold;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+            font-family: 'Poppins', sans-serif;
+            transition: 0.2s;
         }
-        .connected {
-            background-color: #27ae60;
-        }
-        
-        /* Modal Styles untuk Hapus Data */
+        .btn-delete:hover { background: #d63031; }
+
+        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -119,64 +251,87 @@
         }
         .modal-box {
             background: white;
-            padding: 25px;
-            border-radius: 8px;
+            padding: 30px;
+            border-radius: 24px;
             text-align: center;
-            max-width: 300px;
+            max-width: 320px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        .modal-box h3 {
+            margin-top: 0;
+            border: none;
+            padding: 0;
         }
         .modal-btn-group {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 25px;
         }
-        .btn-cancel { background: #95a5a6; color: white; border: none; cursor: pointer;}
-        .btn-delete { background: #e74c3c; color: white; border: none; cursor: pointer;}
+        .btn-cancel { 
+            flex: 1; background: #dfe6e9; color: #2d3436; border: none; 
+            padding: 10px; border-radius: 10px; cursor: pointer; font-weight: 600;
+        }
+        .btn-confirm-del { 
+            flex: 1; background: var(--danger); color: white; border: none; 
+            padding: 10px; border-radius: 10px; cursor: pointer; font-weight: 600;
+        }
 
         @media (max-width: 600px) {
             .form-group { grid-template-columns: 1fr; }
             .btn-submit { grid-column: span 1; }
+            .summary-container { flex-direction: column; gap: 10px; }
+            body { padding: 10px; }
+            .container { padding: 20px; border-radius: 20px; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Catatan Keuangan Semen Bima</h2>
+    <h2>💸 Tracker Patungan Bima</h2>
+    <div class="subtitle">Magang PT Sinar Tambang Arthalestari 2026 - Bakul Semen</div>
     
     <div id="statusKoneksi" class="status-koneksi">
-        Menghubungkan ke Database Cloud...
+        ⏳ Sabar ngab, lagi nyambung ke awan...
     </div>
 
-    <div class="summary-box">
-        Total Pengeluaran Bersama: <span id="totalSemua">Rp0</span><br>
-        Beban per Orang (Hutang): <span id="bebanPerOrang">Rp0</span>
+    <!-- Kotak Ringkasan -->
+    <div class="summary-container">
+        <div class="summary-box">
+            <div class="summary-label">Total Pengeluaran Bersama</div>
+            <div class="summary-value" id="totalSemua">Rp0</div>
+        </div>
+        <div class="summary-box secondary">
+            <div class="summary-label">Jatah Bayar (Per Orang)</div>
+            <div class="summary-value" id="bebanPerOrang">Rp0</div>
+        </div>
     </div>
 
     <!-- Form Input Data -->
     <form id="formTransaksi" class="form-group">
-        <input type="text" id="namaItem" placeholder="Nama Pengeluaran (Misal: Beras)" required disabled>
+        <input type="text" id="namaItem" placeholder="🛍️ Beli apa nih? (Misal: Bakso)" required disabled>
         <select id="pembayar" required disabled>
-            <option value="" disabled selected>Pilih Pembayar...</option>
+            <option value="" disabled selected>👤 Siapa yang talangin?</option>
             <option value="Daffa">Daffa</option>
             <option value="Hapis">Hapis</option>
             <option value="Devan">Devan</option>
             <option value="Abi">Abi</option>
         </select>
-        <input type="number" id="nominal" placeholder="Total Harga (Misal: 25000)" required min="1" disabled>
+        <input type="number" id="nominal" placeholder="💵 Berapa harganya? (Misal: 25000)" required min="1" disabled>
         <input type="date" id="tanggal" required disabled>
-        <button type="submit" id="btnSubmit" class="btn-submit" disabled>Menunggu Koneksi...</button>
+        <button type="submit" id="btnSubmit" class="btn-submit" disabled>Tunggu Koneksi...</button>
     </form>
 
     <!-- Tabel Ringkasan Individu -->
-    <h3>Ringkasan Pengeluaran Individu</h3>
+    <h3>📊 Siapa Nunggak, Siapa Cuan?</h3>
     <div class="table-responsive">
         <table>
             <thead>
                 <tr>
-                    <th>Nama</th>
-                    <th>Total Dikeluarkan</th>
-                    <th>Hutang (Beban)</th>
-                    <th>Bayar (-) / Terima (+)</th>
+                    <th>Nama Pasukan</th>
+                    <th>Total Nalangin</th>
+                    <th>Wajib Bayar</th>
+                    <th>Status Dompet</th>
                 </tr>
             </thead>
             <tbody id="tabelRingkasan">
@@ -186,21 +341,21 @@
     </div>
 
     <!-- Tabel Riwayat Transaksi -->
-    <h3>Riwayat Pengeluaran (Live Database)</h3>
+    <h3>🧾 Riwayat Belanja Kita</h3>
     <div class="table-responsive">
         <table>
             <thead>
                 <tr>
                     <th>Tanggal</th>
-                    <th class="text-left">Item</th>
-                    <th>Pembayar</th>
+                    <th class="text-left">Item Belanja</th>
+                    <th>Pahlawan (Yang Bayar)</th>
                     <th>Nominal</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody id="tabelRiwayat">
                 <!-- Data akan diisi oleh JavaScript -->
-                <tr><td colspan="5">Memuat data dari internet...</td></tr>
+                <tr><td colspan="5">Lagi narik data dari internet... 🏃💨</td></tr>
             </tbody>
         </table>
     </div>
@@ -209,11 +364,11 @@
 <!-- Custom Konfirmasi Hapus Modal -->
 <div id="deleteModal" class="modal-overlay">
     <div class="modal-box">
-        <h3>Hapus Catatan?</h3>
-        <p>Apakah kamu yakin ingin menghapus catatan pengeluaran ini secara permanen?</p>
+        <h3>🗑️ Hapus Catatan?</h3>
+        <p style="font-size: 14px; color: #636e72;">Yakin mau hapus pengeluaran ini? Nanti hitungannya berubah lho.</p>
         <div class="modal-btn-group">
-            <button class="btn-cancel" onclick="tutupModal()">Batal</button>
-            <button class="btn-delete" id="btnConfirmDelete">Ya, Hapus</button>
+            <button class="btn-cancel" onclick="tutupModal()">Gak Jadi</button>
+            <button class="btn-confirm-del" id="btnConfirmDelete">Ya, Hapus!</button>
         </div>
     </div>
 </div>
@@ -240,7 +395,7 @@
     const anggota = ['Daffa', 'Hapis', 'Devan', 'Abi'];
     let currentIdToDelete = null;
 
-    const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(angka);
+    const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
 
     // 1. Inisialisasi Aplikasi
     try {
@@ -250,7 +405,7 @@
         mulaiAutentikasi();
     } catch (error) {
         console.error("Gagal inisialisasi Firebase:", error);
-        document.getElementById('statusKoneksi').innerText = "Konfigurasi Firebase belum diisi dengan benar!";
+        document.getElementById('statusKoneksi').innerHTML = "❌ Waduh, konfigurasi Firebase error!";
     }
 
     // 2. Proses Login Anonymous (Background) agar aman
@@ -259,7 +414,7 @@
             await signInAnonymously(auth);
         } catch (error) {
             console.error("Gagal login:", error);
-            document.getElementById('statusKoneksi').innerText = "Gagal terhubung ke database!";
+            document.getElementById('statusKoneksi').innerHTML = "❌ Gagal masuk ke database!";
         }
     }
 
@@ -269,7 +424,7 @@
             currentUser = user;
             if (user) {
                 // Berhasil connect ke database
-                document.getElementById('statusKoneksi').innerText = "Terkoneksi ke Live Database ✓";
+                document.getElementById('statusKoneksi').innerHTML = "✅ Asik, Udah Nyambung ke Server!";
                 document.getElementById('statusKoneksi').classList.add('connected');
                 
                 // Buka kunci semua form
@@ -280,7 +435,7 @@
                 
                 const btnSubmit = document.getElementById('btnSubmit');
                 btnSubmit.disabled = false;
-                btnSubmit.innerText = "Catat Pengeluaran";
+                btnSubmit.innerText = "🚀 Catat Pengeluaran";
 
                 // Mulai ambil data secara live
                 tarikDataDariDatabase();
@@ -319,111 +474,4 @@
         document.getElementById('bebanPerOrang').innerText = formatRupiah(bebanPerOrang);
 
         const rekapIndividu = anggota.map(nama => {
-            const totalBayar = dataTransaksi.filter(t => t.pembayar === nama).reduce((sum, t) => sum + t.nominal, 0);
-            const status = totalBayar - bebanPerOrang;
-            return { nama, totalBayar, status };
-        });
-
-        const tbodyRingkasan = document.getElementById('tabelRingkasan');
-        tbodyRingkasan.innerHTML = '';
-        rekapIndividu.forEach(data => {
-            let statusClass = data.status < 0 ? 'negative' : 'positive';
-            let statusText = data.status === 0 ? formatRupiah(0) : formatRupiah(data.status);
-            
-            tbodyRingkasan.innerHTML += `
-                <tr>
-                    <td>${data.nama}</td>
-                    <td>${formatRupiah(data.totalBayar)}</td>
-                    <td>${formatRupiah(bebanPerOrang)}</td>
-                    <td class="${statusClass}">${statusText}</td>
-                </tr>
-            `;
-        });
-
-        const tbodyRiwayat = document.getElementById('tabelRiwayat');
-        tbodyRiwayat.innerHTML = '';
-        
-        if (dataTransaksi.length === 0) {
-            tbodyRiwayat.innerHTML = `<tr><td colspan="5">Belum ada catatan pengeluaran.</td></tr>`;
-            return;
-        }
-
-        dataTransaksi.forEach((t) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${t.tanggal}</td>
-                <td class="text-left">${t.namaItem}</td>
-                <td>${t.pembayar}</td>
-                <td>${formatRupiah(t.nominal)}</td>
-                <td><button class="btn-delete" style="padding: 5px 10px;" data-id="${t.id}">Hapus</button></td>
-            `;
-            tbodyRiwayat.appendChild(tr);
-        });
-
-        // Pasang event listener untuk tombol hapus
-        document.querySelectorAll('.btn-delete[data-id]').forEach(btn => {
-            btn.addEventListener('click', function() {
-                bukaModal(this.getAttribute('data-id'));
-            });
-        });
-    }
-
-    // 6. Simpan Data Baru ke Cloud Database
-    document.getElementById('formTransaksi').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        if (!currentUser) return;
-
-        const btnSubmit = document.getElementById('btnSubmit');
-        btnSubmit.disabled = true;
-        btnSubmit.innerText = "Menyimpan ke Cloud...";
-
-        const dataBaru = {
-            namaItem: document.getElementById('namaItem').value,
-            pembayar: document.getElementById('pembayar').value,
-            nominal: parseFloat(document.getElementById('nominal').value),
-            tanggal: document.getElementById('tanggal').value,
-            timestamp: Date.now() 
-        };
-
-        try {
-            const dbPath = collection(db, 'pengeluaran_bersama');
-            await addDoc(dbPath, dataBaru);
-            this.reset();
-            document.getElementById('tanggal').valueAsDate = new Date();
-        } catch (error) {
-            console.error("Gagal menyimpan:", error);
-        } finally {
-            btnSubmit.disabled = false;
-            btnSubmit.innerText = "Catat Pengeluaran";
-        }
-    });
-
-    // 7. Sistem Hapus Data (Modal & Delete)
-    window.bukaModal = (id) => {
-        currentIdToDelete = id;
-        document.getElementById('deleteModal').classList.add('active');
-    };
-
-    window.tutupModal = () => {
-        currentIdToDelete = null;
-        document.getElementById('deleteModal').classList.remove('active');
-    };
-
-    document.getElementById('btnConfirmDelete').addEventListener('click', async () => {
-        if (!currentUser || !currentIdToDelete) return;
-        
-        try {
-            const docRef = doc(db, 'pengeluaran_bersama', currentIdToDelete);
-            await deleteDoc(docRef);
-            tutupModal();
-        } catch(e) {
-            console.error("Gagal menghapus:", e);
-        }
-    });
-
-    // Set tanggal hari ini sebagai default di form
-    document.getElementById('tanggal').valueAsDate = new Date();
-</script>
-
-</body>
-</html>
+            const totalBayar = dataTransaksi.
