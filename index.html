@@ -12,31 +12,73 @@
             --secondary: #00cec9; /* Tosca */
             --danger: #ff7675; /* Merah soft */
             --success: #00b894; /* Hijau soft */
-            --bg-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
             --text-dark: #2d3436;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
+            /* Latar belakang gradasi yang bisa bergerak */
+            background: linear-gradient(-45deg, #a8edea, #fed6e3, #e0c3fc, #8ec5fc);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             color: var(--text-dark);
             margin: 0;
             padding: 20px;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* Gaya Kotak Utama (Glassmorphism) */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .floating-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; /* Agar tidak menghalangi klik pada form */
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            font-size: 2rem;
+            animation: floatUp 15s linear infinite;
+            opacity: 0.5;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Mengatur posisi dan kecepatan tiap emoji secara acak */
+        .floating-emoji:nth-child(1) { left: 10%; animation-duration: 18s; animation-delay: 0s; font-size: 3rem; }
+        .floating-emoji:nth-child(2) { left: 25%; animation-duration: 14s; animation-delay: 2s; font-size: 2.5rem; }
+        .floating-emoji:nth-child(3) { left: 45%; animation-duration: 20s; animation-delay: 5s; font-size: 2rem; }
+        .floating-emoji:nth-child(4) { left: 65%; animation-duration: 16s; animation-delay: 1s; font-size: 3.5rem; }
+        .floating-emoji:nth-child(5) { left: 85%; animation-duration: 22s; animation-delay: 4s; font-size: 2.8rem; }
+        .floating-emoji:nth-child(6) { left: 15%; animation-duration: 17s; animation-delay: 7s; font-size: 2.2rem; }
+        .floating-emoji:nth-child(7) { left: 55%; animation-duration: 19s; animation-delay: 3s; font-size: 3rem; }
+        .floating-emoji:nth-child(8) { left: 75%; animation-duration: 15s; animation-delay: 6s; font-size: 2.4rem; }
+
         .container {
+            position: relative;
+            z-index: 1; /* Agar berada di atas animasi */
             max-width: 900px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             padding: 30px;
             border-radius: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
         h2 {
@@ -45,6 +87,7 @@
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
         }
         
         .subtitle {
@@ -62,7 +105,6 @@
             padding-bottom: 10px;
         }
 
-        /* Notifikasi Koneksi kekinian */
         .status-koneksi {
             text-align: center;
             padding: 10px 20px;
@@ -85,7 +127,6 @@
             color: white;
         }
 
-        /* Kotak Ringkasan Kekinian */
         .summary-container {
             display: flex;
             gap: 15px;
@@ -118,12 +159,11 @@
             font-weight: 700;
         }
 
-        /* Form Input */
         .form-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.6);
             padding: 20px;
             border-radius: 20px;
             border: 1px solid rgba(255,255,255,0.8);
@@ -169,7 +209,6 @@
             cursor: not-allowed;
         }
 
-        /* Tabel Kekinian (Tanpa garis pinggir kaku) */
         .table-responsive {
             overflow-x: auto;
             border-radius: 16px;
@@ -209,7 +248,6 @@
         }
         .text-left { text-align: left; }
 
-        /* Badge Status / Label (Gaya Anak Muda) */
         .badge {
             padding: 6px 12px;
             border-radius: 50px;
@@ -235,7 +273,6 @@
         }
         .btn-delete:hover { background: #d63031; }
 
-        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -291,6 +328,17 @@
 </head>
 <body>
 
+<div class="floating-bg">
+    <span class="floating-emoji">👷‍♂️</span>
+    <span class="floating-emoji">🧱</span>
+    <span class="floating-emoji">🚜</span>
+    <span class="floating-emoji">👷‍♀️</span>
+    <span class="floating-emoji">💸</span>
+    <span class="floating-emoji">🏗️</span>
+    <span class="floating-emoji">👷</span>
+    <span class="floating-emoji">💰</span>
+</div>
+
 <div class="container">
     <h2>💸 Tracker Patungan Bima</h2>
     <div class="subtitle">Magang PT Sinar Tambang Arthalestari 2026 - Bakul Semen</div>
@@ -311,7 +359,6 @@
         </div>
     </div>
 
-    <!-- Form Input Data -->
     <form id="formTransaksi" class="form-group">
         <input type="text" id="namaItem" placeholder="🛍️ Beli apa nih? (Misal: Bakso)" required disabled>
         <select id="pembayar" required disabled>
@@ -378,12 +425,11 @@
 </div>
 
 <script type="module">
-    // Menggunakan Firebase SDK untuk Web
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // --- SETUP DATABASE FIREBASE KAMU ---
+    // Konfigurasi Database Firebase kamu yang sudah tersambung
     const firebaseConfig = {
         apiKey: "AIzaSyDtDcFHsaMpPZTxUf6kL52wasIszmLrIf4",
         authDomain: "catatan-keuangan-semen-bima.firebaseapp.com",
@@ -401,7 +447,6 @@
 
     const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
 
-    // 1. Inisialisasi Aplikasi
     try {
         app = initializeApp(firebaseConfig);
         auth = getAuth(app);
@@ -413,29 +458,24 @@
         document.getElementById('statusKoneksi').classList.add('error');
     }
 
-    // 2. Proses Login Anonymous (Background) agar aman
     async function mulaiAutentikasi() {
         try {
             await signInAnonymously(auth);
         } catch (error) {
             console.error("Gagal login:", error);
-            // Menampilkan error asli ke layar agar mudah dicek
-            document.getElementById('statusKoneksi').innerHTML = `❌ Gagal masuk: ${error.code} (Cek Auth Domain di Firebase)`;
+            document.getElementById('statusKoneksi').innerHTML = `❌ Gagal masuk: ${error.code}`;
             document.getElementById('statusKoneksi').classList.add('error');
         }
     }
 
-    // 3. Pantau Status Koneksi
     if (auth) {
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             if (user) {
-                // Berhasil connect ke database
                 document.getElementById('statusKoneksi').innerHTML = "✅ Asik, Udah Nyambung ke Server!";
                 document.getElementById('statusKoneksi').classList.remove('error');
                 document.getElementById('statusKoneksi').classList.add('connected');
                 
-                // Buka kunci semua form
                 document.getElementById('namaItem').disabled = false;
                 document.getElementById('pembayar').disabled = false;
                 document.getElementById('nominal').disabled = false;
@@ -445,38 +485,29 @@
                 btnSubmit.disabled = false;
                 btnSubmit.innerText = "🚀 Catat Pengeluaran";
 
-                // Mulai ambil data secara live
                 tarikDataDariDatabase();
             }
         });
     }
 
-    // 4. Tarik Data Real-time dari Cloud Firestore
     function tarikDataDariDatabase() {
         if (!currentUser) return;
-
-        // Path penyimpanan database di Firestore
         const dbPath = collection(db, 'pengeluaran_bersama');
-        
         onSnapshot(dbPath, (snapshot) => {
             dataTransaksi = [];
             snapshot.forEach((doc) => {
                 dataTransaksi.push({ id: doc.id, ...doc.data() });
             });
-            
-            // Urutkan data berdasarkan waktu input (terbaru di atas)
             dataTransaksi.sort((a, b) => b.timestamp - a.timestamp);
-            
             perbaruiTampilan();
         }, (error) => {
             console.error("Error mengambil data:", error);
-            document.getElementById('statusKoneksi').innerHTML = `❌ Error Database: ${error.code} (Cek tab Rules Firestore)`;
+            document.getElementById('statusKoneksi').innerHTML = `❌ Error Database: ${error.code}`;
             document.getElementById('statusKoneksi').classList.remove('connected');
             document.getElementById('statusKoneksi').classList.add('error');
         });
     }
 
-    // 5. Update Tabel & Perhitungan secara otomatis
     function perbaruiTampilan() {
         const totalSemua = dataTransaksi.reduce((sum, item) => sum + item.nominal, 0);
         const bebanPerOrang = totalSemua / anggota.length;
@@ -493,11 +524,10 @@
         const tbodyRingkasan = document.getElementById('tabelRingkasan');
         tbodyRingkasan.innerHTML = '';
         rekapIndividu.forEach(data => {
-            // Styling Badge Status Kekinian
             let badgeClass = 'badge-neutral';
             let statusText = 'Lunas 😎';
             
-            if (data.status < -0.5) { // pakai -0.5 untuk menghindari bug desimal javascript
+            if (data.status < -0.5) { 
                 badgeClass = 'badge-negative';
                 statusText = `Minus ${formatRupiah(Math.abs(data.status))}`;
             } else if (data.status > 0.5) {
@@ -524,7 +554,6 @@
         }
 
         dataTransaksi.forEach((t) => {
-            // Ubah format tanggal jadi lebih enak dibaca (opsional)
             const dateObj = new Date(t.tanggal);
             const tglCantik = dateObj.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: '2-digit' });
 
@@ -539,7 +568,6 @@
             tbodyRiwayat.appendChild(tr);
         });
 
-        // Pasang event listener untuk tombol hapus
         document.querySelectorAll('.btn-delete[data-id]').forEach(btn => {
             btn.addEventListener('click', function() {
                 bukaModal(this.getAttribute('data-id'));
@@ -547,7 +575,6 @@
         });
     }
 
-    // 6. Simpan Data Baru ke Cloud Database
     document.getElementById('formTransaksi').addEventListener('submit', async function(e) {
         e.preventDefault();
         if (!currentUser) return;
@@ -578,7 +605,6 @@
         }
     });
 
-    // 7. Sistem Hapus Data (Modal & Delete)
     window.bukaModal = (id) => {
         currentIdToDelete = id;
         document.getElementById('deleteModal').classList.add('active');
@@ -609,7 +635,6 @@
         }
     });
 
-    // Set tanggal hari ini sebagai default di form
     document.getElementById('tanggal').valueAsDate = new Date();
 </script>
 
