@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catatan Keuangan Kelompok</title>
+    <style>
+        :root {
+            --primary-color: #a3c1ad; /* Warna hijau seperti di tabel Excel */
+            --bg-color: #f8f9fa;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h2, h3 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .form-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            grid-column: span 2;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #1a252f;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: var(--primary-color);
+            color: #2c3e50;
+        }
+        .text-left { text-align: left; }
+        .negative { color: #e74c3c; font-weight: bold; }
+        .positive { color: #27ae60; font-weight: bold; }
+        .summary-box {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 600px) {
+            .form-group { grid-template-columns: 1fr; }
+            button { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Catatan Keuangan Patungan</h2>
+    
+    <div class="summary-box">
+        Total Pengeluaran Bersama: <span id="totalSemua">Rp0</span><br>
+        Beban per Orang (Hutang): <span id="bebanPerOrang">Rp0</span>
+    </div>
+
+    <form id="formTransaksi">
+        <input type="text" id="namaItem" placeholder="Nama Pengeluaran (Misal: Beras)" required>
+        <select id="pembayar" required>
+            <option value="" disabled selected>Pilih Pembayar...</option>
+            <option value="Daffa">Daffa</option>
+            <option value="Hapis">Hapis</option>
+            <option value="Devan">Devan</option>
+            <option value="Abi">Abi</option>
+        </select>
+        <input type="number" id="nominal" placeholder="Total Harga (Misal: 25000)" required min="1">
+        <input type="date" id="tanggal" required>
+        <button type="submit">Catat Pengeluaran</button>
+    </form>
+
+    <h3>Ringkasan Pengeluaran Individu</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>Total Dikeluarkan</th>
+                <th>Hutang (Beban)</th>
+                <th>Bayar (-) / Terima (+)</th>
+            </tr>
+        </thead>
+        <tbody id="tabelRingkasan">
+            </tbody>
+    </table>
+
+    <h3>Riwayat Pengeluaran (Mingguan)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th class="text-left">Item</th>
+                <th>Pembayar</th>
+                <th>Nominal</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="tabelRiwayat">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    // Inisialisasi Anggota dan Data dari LocalStorage
+    const anggota = ['Daffa', 'Hapis', 'Devan', 'Abi'];
+    let transaksi = JSON.parse(localStorage.getItem('dataKeuangan')) || [];
+
+    // Format Rupiah
+    const formatRupiah = (angka) => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(angka);
+    };
+
+    // Fungsi Render dan Kalkulasi
+    const perbaruiTampilan = () => {
+        // 1. Hitung Total Pengeluaran Bersama
+        const totalSemua = transaksi.reduce((sum, item) => sum + item.nominal, 0);
+        const bebanPerOrang = totalSemua / anggota.length;
+
+        document.getElementById('totalSemua').innerText = formatRupiah(totalSemua);
+        document.getElementById('bebanPerOrang').innerText = formatRupiah(bebanPerOrang);
+
+        // 2. Hitung Pengeluaran Tiap Individu
+        const rekapIndividu = anggota.map(nama => {
+            const totalBayar = transaksi
+                .filter(t => t.pembayar === nama)
+                .reduce((sum, t) => sum + t.nominal, 0);
+            const status = totalBayar - bebanPerOrang;
+            return { nama, totalBayar, status };
+        });
+
+        // 3. Render Tabel Ringkasan
+        const tbodyRingkasan = document.getElementById('tabelRingkasan');
+        tbodyRingkasan.innerHTML = '';
+        rekapIndividu.forEach(data => {
+            let statusClass = data.status < 0 ? 'negative' : 'positive';
+            let statusText = data.status === 0 ? formatRupiah(0) : formatRupiah(data.status);
+            
+            tbodyRingkasan.innerHTML += `
+                <tr>
+                    <td>${data.nama}</td>
+                    <td>${formatRupiah(data.totalBayar)}</td>
+                    <td>${formatRupiah(bebanPerOrang)}</td>
+                    <td class="${statusClass}">${statusText}</td>
+                </tr>
+            `;
+        });
+
+        // 4. Render Tabel Riwayat Transaksi
+        const tbodyRiwayat = document.getElementById('tabelRiwayat');
+        tbodyRiwayat.innerHTML = '';
+        
+        // Urutkan transaksi dari yang terbaru
+        const transaksiUrut = [...transaksi].sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+        
+        transaksiUrut.forEach((t, index) => {
+            // Index asli di array utama untuk keperluan hapus
+            const originalIndex = transaksi.findIndex(item => item.id === t.id);
+            tbodyRiwayat.innerHTML += `
+                <tr>
+                    <td>${t.tanggal}</td>
+                    <td class="text-left">${t.namaItem}</td>
+                    <td>${t.pembayar}</td>
+                    <td>${formatRupiah(t.nominal)}</td>
+                    <td><button onclick="hapusTransaksi(${originalIndex})" style="background:#e74c3c; padding:5px 10px; grid-column: span 1;">Hapus</button></td>
+                </tr>
+            `;
+        });
+    };
+
+    // Fungsi Tambah Transaksi
+    document.getElementById('formTransaksi').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const dataBaru = {
+            id: Date.now(), // ID unik
+            namaItem: document.getElementById('namaItem').value,
+            pembayar: document.getElementById('pembayar').value,
+            nominal: parseFloat(document.getElementById('nominal').value),
+            tanggal: document.getElementById('tanggal').value
+        };
+
+        transaksi.push(dataBaru);
+        localStorage.setItem('dataKeuangan', JSON.stringify(transaksi));
+        
+        this.reset(); // Kosongkan form
+        perbaruiTampilan();
+    });
+
+    // Fungsi Hapus Transaksi
+    window.hapusTransaksi = (index) => {
+        if(confirm('Yakin ingin menghapus catatan ini?')) {
+            transaksi.splice(index, 1);
+            localStorage.setItem('dataKeuangan', JSON.stringify(transaksi));
+            perbaruiTampilan();
+        }
+    };
+
+    // Set tanggal hari ini sebagai default di form
+    document.getElementById('tanggal').valueAsDate = new Date();
+
+    // Render pertama kali
+    perbaruiTampilan();
+</script>
+
+</body>
+</html>
